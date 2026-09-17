@@ -33,7 +33,6 @@ async def get_current_user(
     return await verify_user(
         token,
         auth_secret_key=settings.auth_secret_key,
-        auth_expire_minutes=settings.access_token_expire_minutes,
         resolver=resolver.get,
     )
 

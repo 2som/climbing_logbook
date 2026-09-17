@@ -65,7 +65,6 @@ class AuthService:
 async def verify_user(
     token,
     auth_secret_key: str,
-    auth_expire_minutes: int,
     resolver: Callable[[str], Awaitable[BaseModel]],
 ) -> AuthenticatedUser:
     try:
@@ -73,7 +72,8 @@ async def verify_user(
         sub = payload.sub
         if sub is None:
             raise UnauthenticatedError("Invalid credentials")
-        # TODO CHECK IS EXPIRED
+    except jwt.ExpiredSignatureError:
+        raise UnauthenticatedError(detail="Token has been expired")
     except jwt.InvalidTokenError:
         raise UnauthenticatedError("Invalid credentials")
     resolved_user = await resolver(sub)
