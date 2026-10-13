@@ -54,7 +54,7 @@ Dokument opisuje zachowanie API bez szczegółów implementacyjnych. Źródła: 
 
 ### 2.3 Definicja ćwiczenia (biblioteka)
 
-- E1. Pola: nazwa, opis (instrukcja wykonania, jak legenda PCC), kategoria (rozgrzewka, drill, główne, cool down, antagoniści/core), typ logowania, flaga "progres w statystykach".
+- E1. Pola: nazwa, opis (instrukcja wykonania, jak legenda PCC), kategoria (rozgrzewka, drill, główne, cool down, mięśnie antagonistyczne / core), typ logowania, flaga "progres w statystykach".
 - E2. Typ logowania określa, jakie pola ma seria przy wykonaniu oraz która metryka jest główna do statystyk:
 
 | Typ | Pola serii | Metryka główna | Kierunek |
