@@ -5,6 +5,7 @@ from uuid_extensions import uuid7
 from sqlalchemy import Date, UniqueConstraint, ForeignKey, JSON
 from features.training_plans.models.enum import ExerciseUnitEnum, SessionTypeEnum
 from libraries.db.session import Base
+from libraries.db.types import ValueEnum
 
 
 class TrainingPlan(Base):
@@ -40,7 +41,7 @@ class Session(Base):
     name: Mapped[str]
     description: Mapped[str | None] = mapped_column(default=None)
     duration_minutes: Mapped[int]
-    type: Mapped[SessionTypeEnum] = mapped_column(default=SessionTypeEnum.OPEN)
+    type: Mapped[SessionTypeEnum] = mapped_column(ValueEnum(SessionTypeEnum), default=SessionTypeEnum.OPEN)
 
 
 class Exercise(Base):
@@ -55,5 +56,5 @@ class Exercise(Base):
     sets: Mapped[int | None] = mapped_column(default=None)
     repetitions: Mapped[int | None] = mapped_column(default=None)
     duration_seconds: Mapped[int | None] = mapped_column(default=None)
-    unit: Mapped[ExerciseUnitEnum | None] = mapped_column(default=None)
+    unit: Mapped[ExerciseUnitEnum | None] = mapped_column(ValueEnum(ExerciseUnitEnum), default=None)
     unit_label: Mapped[str | None] = mapped_column(default=None)

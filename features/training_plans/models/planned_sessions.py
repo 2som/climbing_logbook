@@ -33,7 +33,7 @@ class PlannedSession(Base):
     duration_minutes: Mapped[int | None] = mapped_column(default=None)
     notes: Mapped[str | None] = mapped_column(default=None)
     start_date: Mapped[datetime.date] = mapped_column(Date)
-    perveived_difficulty: Mapped[int | None] = mapped_column(default=None)
+    perceived_difficulty: Mapped[int | None] = mapped_column(default=None)
 
     exercises: Mapped[list["PlannedExercise"]] = relationship(cascade="all, delete-orphan")
 

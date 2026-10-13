@@ -1,7 +1,9 @@
 from uuid import UUID
 
 from pydantic import BaseModel
-from sqlalchemy import JSON, String
+from enum import Enum as PyEnum
+
+from sqlalchemy import JSON, Enum, String
 from sqlalchemy.engine import Dialect
 from sqlalchemy.types import TypeDecorator
 
@@ -48,3 +50,8 @@ class PydanticJSON[T: BaseModel](TypeDecorator):
         if value is None:
             return None
         return self.model.model_validate(value)
+
+
+def ValueEnum(enum_cls: type[PyEnum]) -> Enum:
+    """Enum column that stores member values (e.g. "kg"), not member names ("KG")."""
+    return Enum(enum_cls, values_callable=lambda e: [m.value for m in e])

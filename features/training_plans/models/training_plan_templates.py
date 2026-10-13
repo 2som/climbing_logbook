@@ -3,6 +3,7 @@ from uuid import UUID
 from uuid_extensions import uuid7
 from sqlalchemy.orm import Mapped, mapped_column
 from libraries.db.session import Base
+from libraries.db.types import ValueEnum
 from features.training_plans.models.enum import ExerciseUnitEnum
 
 class ExerciseTemplate(Base):
@@ -14,5 +15,5 @@ class ExerciseTemplate(Base):
     sets: Mapped[int | None] = mapped_column(default=None)
     repetitions: Mapped[int | None] = mapped_column(default=None)
     duration_seconds: Mapped[int | None] = mapped_column(default=None)
-    unit: Mapped[ExerciseUnitEnum | None] = mapped_column(default=None)
+    unit: Mapped[ExerciseUnitEnum | None] = mapped_column(ValueEnum(ExerciseUnitEnum), default=None)
     unit_label: Mapped[str | None] = mapped_column(default=None)

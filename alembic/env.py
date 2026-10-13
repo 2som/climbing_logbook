@@ -7,7 +7,9 @@ from alembic import context
 
 from libraries.db import Base
 
+from features.training_plans.models.planned_sessions import PlannedSession  # noqa: F401
 from features.training_plans.models.training_plan import TrainingPlan  # noqa: F401
+from features.training_plans.models.training_plan_templates import ExerciseTemplate  # noqa: F401
 from features.users.model import UserModel # noqa: F401
 
 
