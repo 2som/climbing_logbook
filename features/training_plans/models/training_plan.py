@@ -1,8 +1,9 @@
+import datetime
 from uuid import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from uuid_extensions import uuid7
-from sqlalchemy import UniqueConstraint, ForeignKey, JSON
-from features.training_plans.models.enum import ExcerciseUnitEnum
+from sqlalchemy import Date, UniqueConstraint, ForeignKey, JSON
+from features.training_plans.models.enum import ExerciseUnitEnum, SessionTypeEnum
 from libraries.db.session import Base
 
 
@@ -13,14 +14,23 @@ class TrainingPlan(Base):
     user_uuid: Mapped[UUID] = mapped_column(ForeignKey("users.uuid"))
     name: Mapped[str]
 
+
+class ActiveTrainingPlan(Base):
+    __tablename__ = "users_active_training_plans"
+    uuid: Mapped[UUID] = mapped_column(primary_key=True, default=uuid7)
+    user_uuid: Mapped[UUID] = mapped_column(ForeignKey("users.uuid"), unique=True)
+    plan_uuid: Mapped[UUID] = mapped_column(ForeignKey("training_plans.uuid"))
+    start_date: Mapped[datetime.date] = mapped_column(Date, default=None)
+    end_date: Mapped[datetime.date]= mapped_column(Date, default=None)
+
 class Phase(Base):
     __tablename__ = "phases"
     uuid: Mapped[UUID] = mapped_column(primary_key=True, default=uuid7)
     name: Mapped[str]
     plan_uuid: Mapped[UUID] = mapped_column(ForeignKey("training_plans.uuid"))
+    description: Mapped[str]
+    duration_weeks: Mapped[int]
     order: Mapped[int]
-    description: str
-
 
 class Session(Base):
     __tablename__ = "sessions"
@@ -30,12 +40,14 @@ class Session(Base):
     name: Mapped[str]
     description: Mapped[str | None] = mapped_column(default=None)
     duration_minutes: Mapped[int]
+    type: Mapped[SessionTypeEnum] = mapped_column(default=SessionTypeEnum.OPEN)
 
 
-class Excercise(Base):
-    __tablename__ = "excercises"
+class Exercise(Base):
+    __tablename__ = "exercises"
     uuid: Mapped[UUID] = mapped_column(primary_key=True, default=uuid7)
-    session_uuid: Mapped[UUID] = mapped_column(ForeignKey(column="sessions.uuid"))
+    session_uuid: Mapped[UUID] = mapped_column(ForeignKey("sessions.uuid"))
+    exercise_template_uuid: Mapped[UUID | None] = mapped_column(ForeignKey("exercise_templates.uuid"), nullable=True)
     name: Mapped[str]
     description: Mapped[str]
     order: Mapped[int]
@@ -43,5 +55,5 @@ class Excercise(Base):
     sets: Mapped[int | None] = mapped_column(default=None)
     repetitions: Mapped[int | None] = mapped_column(default=None)
     duration_seconds: Mapped[int | None] = mapped_column(default=None)
-    unit: Mapped[ExcerciseUnitEnum | None] = mapped_column(default=None)
-    unit_label: Mapped[dict | None] = mapped_column(JSON)
+    unit: Mapped[ExerciseUnitEnum | None] = mapped_column(default=None)
+    unit_label: Mapped[str | None] = mapped_column(default=None)
