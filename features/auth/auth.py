@@ -68,6 +68,8 @@ async def verify_user(
     resolver: Callable[[str], Awaitable[BaseModel]],
 ) -> AuthenticatedUser:
     try:
+        if not token:
+            raise UnauthenticatedError("Invalid credentials")    
         payload = decode(token=token.credentials, secret=auth_secret_key)
         sub = payload.sub
         if sub is None:

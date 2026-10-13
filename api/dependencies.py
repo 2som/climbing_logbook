@@ -7,6 +7,8 @@ from fastapi.security import HTTPBearer
 from api.settings import Settings
 from features.auth import AuthenticatedUser, verify_user
 from features.users import UsersRepository
+from libraries.db.session import get_session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 bearer_scheme = HTTPBearer(
@@ -38,3 +40,4 @@ async def get_current_user(
 
 
 CurrentUser = Annotated[AuthenticatedUser, Depends(get_current_user)]
+DbSession = Annotated[AsyncSession, Depends(get_session)]

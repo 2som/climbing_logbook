@@ -1,6 +1,13 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:poetry",
     "python-envs.defaultPackageManager": "ms-python.python:poetry",
+    "python.defaultInterpreterPath": "/home/ms/.cache/pypoetry/virtualenvs/climbing-lookbook-cLnEMQZA-py3.13/bin/python",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.indexing": true,
+    "python.analysis.packageIndexDepths": [
+        { "name": "fastapi", "depth": 2 },
+        { "name": "sqlalchemy", "depth": 3 }
+    ],
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.callArgumentNames": "partial",
