@@ -3,6 +3,8 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+from uuid import UUID
+
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -11,6 +13,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase
+
+from libraries.db.types import UUIDString
 
 
 _session_factory: async_sessionmaker[AsyncSession] | None = None
@@ -28,6 +32,7 @@ class Base(DeclarativeBase):
     """Declarative base shared by all ORM models"""
 
     metadata = MetaData(naming_convention=convention)
+    type_annotation_map = {UUID: UUIDString}
 
 
 def initialize_database(url: str) -> AsyncEngine:

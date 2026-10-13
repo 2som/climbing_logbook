@@ -8,6 +8,7 @@ from alembic import context
 from libraries.db import Base
 
 from features.training_plans.models.training_plan import TrainingPlan  # noqa: F401
+from features.users.model import UserModel # noqa: F401
 
 
 # this is the Alembic Config object, which provides
@@ -71,7 +72,9 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata,
+            render_as_batch=True,
         )
 
         with context.begin_transaction():

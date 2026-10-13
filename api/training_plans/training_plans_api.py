@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter
 from pydantic import BaseModel
@@ -35,4 +36,9 @@ async def get():
 
 @router.patch("/training-plans/{plan_uuid}")
 async def edit():
+    pass
+
+
+@router.put("/training-plans/{plan_uuid}/phases")
+async def update_training_plan_phases(list):
     pass

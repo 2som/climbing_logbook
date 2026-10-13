@@ -22,22 +22,18 @@ bearer_scheme = HTTPBearer(
 def get_settings():
     return Settings()
 
-
-def get_users_repository():
-    return UsersRepository()
-
+DbSession = Annotated[AsyncSession, Depends(get_session)]
 
 async def get_current_user(
     token: Annotated[str, Depends(bearer_scheme)],
-    resolver: Annotated[UsersRepository, Depends(get_users_repository)],
     settings: Annotated[Settings, Depends(get_settings)],
+    session: DbSession,
 ) -> AuthenticatedUser:
+    resolver = UsersRepository(session)
     return await verify_user(
         token,
         auth_secret_key=settings.auth_secret_key,
         resolver=resolver.get,
     )
 
-
 CurrentUser = Annotated[AuthenticatedUser, Depends(get_current_user)]
-DbSession = Annotated[AsyncSession, Depends(get_session)]

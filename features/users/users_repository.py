@@ -1,38 +1,35 @@
-
-
 from uuid import UUID
 
 from pydantic import BaseModel, Field
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from features.users.model import UserModel
 
-fake_users_db = {
-    "user@gmail.com": {
-        "uuid": "9ae3b653-94c4-4848-993d-8675dc306272",
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "user@gmail.com",
-        "password": "$argon2id$v=19$m=65536,t=3,p=4$Lubt8H8GmbHz+Fsg33bUEQ$Uffny4/6dTuH1fGYXsruVJJ4GscEORg3n9nhgOI4B/g",
-        "disabled": False,
-    },
-}
 
 class User(BaseModel):
     uuid: UUID
-    username: str
     email: str
     disabled: bool
     password: str = Field(exclude=True)
 
 
 class UsersRepository:
+    def __init__(self, session: AsyncSession):
+        self._session = session
+
     async def get(self, uuid: UUID) -> User | None:
-        for _, v in fake_users_db.items():
-            if v["uuid"] == str(uuid):
-                return User.model_validate(v)
-        return None
+        result = (await self._session.execute(
+            select(UserModel).where(UserModel.uuid == uuid)
+        )).scalar_one_or_none()
+        if not result:
+            return None
+        return User.model_validate(result.as_dict())
 
     async def get_by_email(self, email: str) -> User | None:
-        for _, v in fake_users_db.items():
-            if v["email"] == email:
-                return User.model_validate(v)
-        return None
+        result = (await self._session.execute(
+            select(UserModel).where(UserModel.email == email)
+        )).scalar_one_or_none()
+        if not result:
+            return None
+        return User.model_validate(result.as_dict())
