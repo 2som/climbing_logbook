@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from api.auth.auth_api import router as auth_router
 from api.training_plans.training_plans_api import router as training_plans_router
+from api.calendar.calendar_api import router as calendar_router
 from libraries.db.session import initialize_database
 
 def _register_openapi_security_scheme(app: FastAPI) -> None:
@@ -25,4 +26,5 @@ app = FastAPI()
 
 app.include_router(auth_router)
 app.include_router(training_plans_router)
+app.include_router(calendar_router)
 _register_openapi_security_scheme(app)

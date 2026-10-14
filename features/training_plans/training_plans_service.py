@@ -12,6 +12,7 @@ from features.training_plans.models.training_plan import (
 )
 from features.training_plans.schema import TrainingPlanResource
 
+
 async def get_active_training_plan_for_user(user_uuid: UUID, session: AsyncSession):
     active = (
         await session.execute(
@@ -37,3 +38,15 @@ async def get_active_training_plan_for_user(user_uuid: UUID, session: AsyncSessi
     ).scalar_one_or_none()
 
     return TrainingPlanResource.from_model(plan, active.start_date) if plan else None
+
+
+async def get_training_session(
+    user_uuid: UUID, session_uuid: UUID, db_session: AsyncSession
+):
+    return (
+        await db_session.execute(
+            statement=select(Session)
+            .where(Session.uuid == session_uuid)
+            .options(selectinload(Session.excercises))
+        )
+    ).scalar_one_or_none()
