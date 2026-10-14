@@ -1,6 +1,6 @@
 import datetime
 from uuid import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid_extensions import uuid7
 from sqlalchemy import Date, UniqueConstraint, ForeignKey, JSON
 from features.training_plans.models.enum import ExerciseUnitEnum, SessionTypeEnum
@@ -14,6 +14,8 @@ class TrainingPlan(Base):
     uuid: Mapped[UUID] = mapped_column(primary_key=True, default=uuid7)
     user_uuid: Mapped[UUID] = mapped_column(ForeignKey("users.uuid"))
     name: Mapped[str]
+
+    phases: Mapped[list["Phase"]] = relationship(order_by="Phase.order")
 
 
 class ActiveTrainingPlan(Base):
@@ -33,6 +35,8 @@ class Phase(Base):
     duration_weeks: Mapped[int]
     order: Mapped[int]
 
+    sessions: Mapped[list["Session"]] = relationship()
+
 class Session(Base):
     __tablename__ = "sessions"
     uuid: Mapped[UUID] = mapped_column(primary_key=True, default=uuid7)
@@ -42,6 +46,8 @@ class Session(Base):
     description: Mapped[str | None] = mapped_column(default=None)
     duration_minutes: Mapped[int]
     type: Mapped[SessionTypeEnum] = mapped_column(ValueEnum(SessionTypeEnum), default=SessionTypeEnum.OPEN)
+
+    excercises: Mapped[list["Exercise"]] = relationship(order_by="Exercise.order")
 
 
 class Exercise(Base):
